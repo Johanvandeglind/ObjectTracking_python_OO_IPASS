@@ -1,8 +1,11 @@
-import src
 import cv2
-class ImageProcessor():
 
-    def get_Contours(self,img, cont_image):  # ,t1,t2,opp,opp2)
+
+class ImageProcessor:
+    def __init__(self):
+        pass
+
+    def get_Contours(self, img, cont_image):  # ,t1,t2,opp,opp2)
         _, thresh1 = cv2.threshold(img, 140, 86, cv2.THRESH_BINARY)
         contours, hierarchy = cv2.findContours(thresh1, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
         big_cnt = []
@@ -21,7 +24,7 @@ class ImageProcessor():
                             (0, 255, 0), 2)
         return big_cnt
 
-    def format_image(self,img):
+    def format_image(self, img):
 
         imgCont = img.copy()
         img = cv2.bitwise_not(img)
@@ -33,7 +36,7 @@ class ImageProcessor():
         cnt = self.get_Contours(imgGray, imgCont)  # ,t1,t2,opp,opp2)
         return cnt
 
-    def combine_and_compare(self,img1, img2):
+    def combine_and_compare(self, img1, img2):
         cnt1 = self.format_image(img1)
         cnt2 = self.format_image(img2)
         img_copy = img1.copy()
@@ -76,7 +79,8 @@ class ImageProcessor():
         cv2.circle(img_copy, (cnt2X, cnt2Y), 3, (0, 0, 255), -1)
         return img_copy
 
-    def show_and_save_image(self,real_image: str, robodk_image: str, output_name: str, size_pers: int, live: bool,cameranumber:int):
+    def show_and_save_image(self, real_image: str, robodk_image: str, output_name: str, size_pers: int, live: bool,
+                            cameranumber: int):
 
         img2 = cv2.imread(robodk_image)
         if live:
