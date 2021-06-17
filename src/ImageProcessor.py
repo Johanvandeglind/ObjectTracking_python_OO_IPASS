@@ -1,64 +1,72 @@
 import cv2
-
-
+import numpy as np
+from PIL import Image
 class ImageProcessor:
     def __init__(self):
         pass
 
     def empty(a):
         pass
-    cv2.namedWindow("Match!")
-    cv2.resizeWindow("Match!",640,240)
-    cv2.createTrackbar("Threshold1","Match!",140,255,empty)
-    cv2.createTrackbar("Threshold2","Match!",86,255,empty)
-    cv2.createTrackbar("opp","Match!",25000,100000,empty)
-    cv2.createTrackbar("opp2","Match!",45000,100000,empty)
+    # cv2.namedWindow("Parameters")
+    # cv2.resizeWindow("Parameters",640,240)
+    # cv2.createTrackbar("Threshold1","Parameters",115,255,empty)
+    # cv2.createTrackbar("Threshold2","Parameters",255,255,empty)
+    # cv2.createTrackbar("opp","Parameters",5000,100000,empty)
+    # cv2.createTrackbar("opp2","Parameters",65000,100000,empty)
 
 
-    def get_Contours(self, img, cont_image  ,t1,t2,opp,opp2):#
-        _, thresh1 = cv2.threshold(img, t1, t2, cv2.THRESH_BINARY)
+    def get_Contours(self, img, t1,t2,opp,opp2):#
+        _, thresh1 = cv2.threshold(img, 122, 51, cv2.THRESH_BINARY)
         contours, hierarchy = cv2.findContours(thresh1, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
         big_cnt = []
+        #print(contours)
+        # cv2.drawContours(img,contours,-1, (255, 0, 0), 3)
+        #cv2.imshow("cnt_img",img)
         for cnt in contours:
             area = cv2.contourArea(cnt)
-            # qprint(area)
-
-            if area > opp and area < opp2:
+            if area > 25000 and area < 65000:
+                #print(cnt)
                 big_cnt.append(cnt)
         return big_cnt
 
     def format_image(self, img):
-
-        imgCont = img.copy()
-        img = cv2.bitwise_not(img)
+        #img = cv2.bitwise_not(img)
         imgGray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        t1 = cv2.getTrackbarPos("Threshold1","Match!")
-        t2 = cv2.getTrackbarPos("Threshold2", "Match!")
-        opp = cv2.getTrackbarPos("opp", "Match!")
-        opp2 = cv2.getTrackbarPos("opp2", "Match!")
-        cnt = self.get_Contours(imgGray, imgCont ,t1,t2,opp,opp2)  #
-        return cnt
+        # frame = img.copy()
+        # hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+        #
+        # lower_white = np.array([0, 0, 168])
+        # upper_white = np.array([50, 40, 255])
+        #
+        # mask = cv2.inRange(hsv, lower_white, upper_white)
+        # res = cv2.bitwise_and(frame, frame, mask=mask)
+        #
+        # dim = (int(mask.shape[1] * 25 / 100), int(mask.shape[0] * 25 / 100))
+        # img1_res = cv2.resize(mask, dim, interpolation=cv2.INTER_AREA)
+        # dim = (int(res.shape[1] * 25 / 100), int(res.shape[0] * 25 / 100))
+        # img2_res = cv2.resize(res, dim, interpolation=cv2.INTER_AREA)
+        # #numpy_horizontal = np.hstack((img1_res, img2_res))
+        #
+        # cv2.imshow('mask', img1_res)
+        # cv2.waitKey()
+        return imgGray
 
-    def combine_and_compare(self, img1, img2):
-        cnt1 = self.format_image(img1)
-        cnt2 = self.format_image(img2)
-        img_copy = img1.copy()
+    def combine_and_compare(self, cnt_real_img, cnt_robodk_img,real_img):
+
+        img_copy = real_img.copy()
+
         smatch = 10
         matchcont1 = []
         matchcont2 = []
-        for x in range(len(cnt1)):
-            for y in range(len(cnt2)):
-                match = (cv2.matchShapes(cnt1[x], cnt2[y], 2, 0.0))
-
-                #cv2.drawContours(img_copy, cnt2[y], -1, (0, 0, 255), 3)
-                # cv2.imshow("im_Copy",img_copy)
-                # cv2.waitKey(3)
-                print(match)
+        for x in range(len(cnt_real_img)):
+            for y in range(len(cnt_robodk_img)):
+                match = (cv2.matchShapes(cnt_real_img[x], cnt_robodk_img[y], 2, 0.0))
+               # print(match)
                 if match < smatch:
                     smatch = match
-                    matchcont1 = cnt1[x]
-                    matchcont2 = cnt2[y]
-        # cv2.imshow("Match!", img_copy)
+                    matchcont1 = cnt_real_img[x]
+                    matchcont2 = cnt_robodk_img[y]
+        #cv2.imshow("img_copy", img_copy)
 
         cv2.drawContours(img_copy, matchcont1, -1, (255, 0, 0), 3)
         cv2.drawContours(img_copy, matchcont2, -1, (0, 0, 255), 3)
@@ -72,7 +80,6 @@ class ImageProcessor:
             # print(len(approx))
             x2, y2, w2, h2 = cv2.boundingRect(approx_cnt2)
             M_cnt1 = cv2.moments(matchcont1)
-            # calculate x,y coordinate of center
             cnt1X = int(M_cnt1["m10"] / M_cnt1["m00"])
             cnt1Y = int(M_cnt1["m01"] / M_cnt1["m00"])
             cv2.circle(img_copy, (cnt1X, cnt1Y), 3, (255, 0, 0), -1)
@@ -87,44 +94,65 @@ class ImageProcessor:
             print("no shape found")
             return img_copy
 
-    def show_and_save_image(self, real_image: str, robodk_image: str, output_name: str, size_pers: int, live: bool,
+    def show_and_save_image(self, path_real_image: str, path_robodk_image: str, output_name: str, size_pers: int, live: bool,
                             cameranumber: int):
 
-        img2 = cv2.imread(robodk_image)
+        robodk_image = cv2.imread(path_robodk_image)
         if live:
             cap = cv2.VideoCapture(cameranumber)
-            cap.set(3, 2592)
-            cap.set(4, 1944)
+            cap.set(cv2.CAP_PROP_FRAME_WIDTH, 2048)
+            cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1536)
             assert cap.isOpened(), "file/camera could not be opened!"
             while True:
-                succes, img1 = cap.read()
-                # cv2.imshow("Match!", img1)
-                # #cv2.waitKey(1)
-                # if cv2.waitKey(1) & 0xff == ord('q'):
-                combined_image = self.combine_and_compare(img1, img2)
-                # #cv2.imwrite(output_name, combined_image)
-                dim = (int(combined_image.shape[1] * size_pers / 100), int(combined_image.shape[0] * size_pers / 100))
+                r, real_image = cap.read()
+                #print(r)
+                # print("realshape",real_image.shape[1],real_image.shape[0])
                 #
-                # # resize image
+                # print("roboshape",robodk_image.shape)
+                real_img_format = self.format_image(real_image)
+                robodk_img_format = self.format_image(robodk_image)
+
+                t1 = cv2.getTrackbarPos("Threshold1", "Parameters")
+                t2 = cv2.getTrackbarPos("Threshold2", "Parameters")
+                opp = cv2.getTrackbarPos("opp", "Parameters")
+                opp2 = cv2.getTrackbarPos("opp2", "Parameters")
+
+                cnt_real_img = self.get_Contours(real_img_format, t1, t2, opp, opp2)
+                cnt_robodk_img = self.get_Contours(robodk_img_format, t1, t2, opp, opp2)
+
+                combined_image = self.combine_and_compare(cnt_real_img, cnt_robodk_img, real_image)
+                # cv2.imwrite(output_name, combined_image)
+                dim = (int(combined_image.shape[1] * size_pers / 100), int(combined_image.shape[0] * size_pers / 100))
                 img = cv2.resize(combined_image, dim, interpolation=cv2.INTER_AREA)
-                cv2.imshow("Match!", img)
-                cv2.waitKey(1)
+                dim = (int(robodk_image.shape[1] * size_pers / 100), int(robodk_image.shape[0] * size_pers / 100))
+                img2_res = cv2.resize(robodk_image, dim, interpolation=cv2.INTER_AREA)
+                numpy_horizontal = np.hstack((img, img2_res))
+                cv2.imshow("Match!", numpy_horizontal)
                 if cv2.waitKey(1) & 0xff == ord('q'):
                     break
         else:
             while True:
-                img1 = cv2.imread(real_image)
-                combined_image = self.combine_and_compare(img1, img2)
-                cv2.imwrite(output_name, combined_image)
-                scale_percent = size_pers  # percent of original size
-                width = int(combined_image.shape[1] * scale_percent / 100)
-                height = int(combined_image.shape[0] * scale_percent / 100)
-                dim = (width, height)
-                print(dim)
+                real_image = cv2.imread(path_real_image)
 
-                # resize image
+                real_img_format = self.format_image(real_image)
+                robodk_img_format = self.format_image(robodk_image)
+
+                t1 = cv2.getTrackbarPos("Threshold1", "Parameters")
+                t2 = cv2.getTrackbarPos("Threshold2", "Parameters")
+                opp = cv2.getTrackbarPos("opp", "Parameters")
+                opp2 = cv2.getTrackbarPos("opp2", "Parameters")
+
+                cnt_real_img = self.get_Contours(real_img_format, t1, t2, opp, opp2)
+                cnt_robodk_img = self.get_Contours(robodk_img_format, t1, t2, opp, opp2)
+
+                combined_image = self.combine_and_compare(cnt_real_img, cnt_robodk_img, real_image)
+                #cv2.imwrite(output_name, combined_image)
+                dim = (int(combined_image.shape[1] * size_pers / 100), int(combined_image.shape[0] * size_pers / 100))
                 img = cv2.resize(combined_image, dim, interpolation=cv2.INTER_AREA)
-                cv2.imshow("Match!", img)
-                cv2.waitKey()
+                dim = (int(robodk_image.shape[1] * 25 / 100), int(robodk_image.shape[0] * 25 / 100))
+                img2_res = cv2.resize(robodk_image, dim, interpolation=cv2.INTER_AREA)
+                numpy_horizontal = np.hstack((img, img2_res))
+                cv2.imshow("Match!", numpy_horizontal)
+                #cv2.waitKey(0)
                 if cv2.waitKey(1) & 0xff == ord('q'):
                     break
