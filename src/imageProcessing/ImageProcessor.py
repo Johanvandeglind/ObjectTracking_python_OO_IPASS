@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-from PIL import Image
+from src.Application.App import App
 class ImageProcessor:
     def __init__(self):
         pass
@@ -19,9 +19,6 @@ class ImageProcessor:
         _, thresh1 = cv2.threshold(img, 122, 51, cv2.THRESH_BINARY)
         contours, hierarchy = cv2.findContours(thresh1, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
         big_cnt = []
-        #print(contours)
-        # cv2.drawContours(img,contours,-1, (255, 0, 0), 3)
-        #cv2.imshow("cnt_img",img)
         for cnt in contours:
             area = cv2.contourArea(cnt)
             if area > 25000 and area < 65000:
@@ -32,23 +29,7 @@ class ImageProcessor:
     def format_image(self, img):
         #img = cv2.bitwise_not(img)
         imgGray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        # frame = img.copy()
-        # hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-        #
-        # lower_white = np.array([0, 0, 168])
-        # upper_white = np.array([50, 40, 255])
-        #
-        # mask = cv2.inRange(hsv, lower_white, upper_white)
-        # res = cv2.bitwise_and(frame, frame, mask=mask)
-        #
-        # dim = (int(mask.shape[1] * 25 / 100), int(mask.shape[0] * 25 / 100))
-        # img1_res = cv2.resize(mask, dim, interpolation=cv2.INTER_AREA)
-        # dim = (int(res.shape[1] * 25 / 100), int(res.shape[0] * 25 / 100))
-        # img2_res = cv2.resize(res, dim, interpolation=cv2.INTER_AREA)
-        # #numpy_horizontal = np.hstack((img1_res, img2_res))
-        #
-        # cv2.imshow('mask', img1_res)
-        # cv2.waitKey()
+
         return imgGray
 
     def combine_and_compare(self, cnt_real_img, cnt_robodk_img,real_img):
@@ -87,7 +68,7 @@ class ImageProcessor:
             M_cnt2 = cv2.moments(matchcont2)
             cnt2X = int(M_cnt2["m10"] / M_cnt2["m00"])
             cnt2Y = int(M_cnt2["m01"] / M_cnt2["m00"])
-            #print((cnt1X, cnt1Y), (cnt2X, cnt2Y))
+            print((cnt1X, cnt1Y), (cnt2X, cnt2Y))
             cv2.circle(img_copy, (cnt2X, cnt2Y), 3, (0, 0, 255), -1)
             return img_copy
         except:
@@ -95,7 +76,7 @@ class ImageProcessor:
             return img_copy
 
     def show_and_save_image(self, path_real_image: str, path_robodk_image: str, output_name: str, size_pers: int, live: bool,
-                            cameranumber: int):
+                            cameranumber: int,app:App):
 
         robodk_image = cv2.imread(path_robodk_image)
         if live:
@@ -127,7 +108,8 @@ class ImageProcessor:
                 dim = (int(robodk_image.shape[1] * size_pers / 100), int(robodk_image.shape[0] * size_pers / 100))
                 img2_res = cv2.resize(robodk_image, dim, interpolation=cv2.INTER_AREA)
                 numpy_horizontal = np.hstack((img, img2_res))
-                cv2.imshow("Match!", numpy_horizontal)
+                app.show_Image(numpy_horizontal)
+                #cv2.imshow("Match!", numpy_horizontal)
                 if cv2.waitKey(1) & 0xff == ord('q'):
                     break
         else:
@@ -152,7 +134,8 @@ class ImageProcessor:
                 dim = (int(robodk_image.shape[1] * 25 / 100), int(robodk_image.shape[0] * 25 / 100))
                 img2_res = cv2.resize(robodk_image, dim, interpolation=cv2.INTER_AREA)
                 numpy_horizontal = np.hstack((img, img2_res))
-                cv2.imshow("Match!", numpy_horizontal)
+                app.show_Image(numpy_horizontal)
+                #cv2.imshow("Match!", numpy_horizontal)
                 #cv2.waitKey(0)
                 if cv2.waitKey(1) & 0xff == ord('q'):
                     break
