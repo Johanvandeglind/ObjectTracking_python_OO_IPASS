@@ -10,3 +10,4 @@ class App():
         # if cv2.getWindowProperty("Output")>0:
         #     cv2.clo
         cv2.imshow("Output",image)
+

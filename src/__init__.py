@@ -1,4 +1,6 @@
 #lulaconst1
+import cv2
+
 from src.Application.App import App
 from src.imageProcessing.ImageProcessor import ImageProcessor
 from src.imageProcessing.LiveImage import LiveImage
@@ -20,11 +22,10 @@ class Main:
     """
     app = App()
     cam_image = StaticImage('Recources/topview2.jpg', 'cam_img')
-    robo_dk_image = StaticImage('Recources/cameraSideMount v5_v12.png', 'robodk_img')
+    robo_dk_image = StaticImage('Recources/cameraSideMount v5_v11.png', 'robodk_img')
     live_image = LiveImage(1, 'liveImage')
     imgprocessor = ImageProcessor()
-    imgprocessor.show_and_save_image(cam_image.get_SourcePath(), robo_dk_image.get_SourcePath(),
-                                     'combined_image.png', 25, True, live_image.get_CameraNumber(),app)
+    imgprocessor.show_and_save_image(cam_image, robo_dk_image, 25, live_image, app)
 
 if __name__ == "__main__":
     Main()
