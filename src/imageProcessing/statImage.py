@@ -1,4 +1,6 @@
-from src import Image
+from src.imageProcessing import Image
+
+
 class StaticImage(Image.Image):
     sourcePath = 0
 

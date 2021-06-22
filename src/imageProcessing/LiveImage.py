@@ -1,5 +1,6 @@
-import src
-from src import Image
+from src.imageProcessing import Image
+
+
 class LiveImage(Image.Image):
     CameraNumber = 0
 

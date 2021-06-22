@@ -1,6 +1,10 @@
 import cv2
 import numpy as np
 from PIL import Image
+
+from src.Application.flask_app import *
+
+
 class ImageProcessor:
     def __init__(self):
         pass
@@ -32,24 +36,17 @@ class ImageProcessor:
     def format_image(self, img):
         #img = cv2.bitwise_not(img)
         imgGray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        # frame = img.copy()
-        # hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-        #
-        # lower_white = np.array([0, 0, 168])
-        # upper_white = np.array([50, 40, 255])
-        #
-        # mask = cv2.inRange(hsv, lower_white, upper_white)
-        # res = cv2.bitwise_and(frame, frame, mask=mask)
-        #
-        # dim = (int(mask.shape[1] * 25 / 100), int(mask.shape[0] * 25 / 100))
-        # img1_res = cv2.resize(mask, dim, interpolation=cv2.INTER_AREA)
-        # dim = (int(res.shape[1] * 25 / 100), int(res.shape[0] * 25 / 100))
-        # img2_res = cv2.resize(res, dim, interpolation=cv2.INTER_AREA)
-        # #numpy_horizontal = np.hstack((img1_res, img2_res))
-        #
-        # cv2.imshow('mask', img1_res)
-        # cv2.waitKey()
         return imgGray
+    def get_coordinates(self,cnt):
+        peri_cnt1 = cv2.arcLength(cnt, True)
+        approx_cnt1 = cv2.approxPolyDP(cnt, 0.02 * peri_cnt1, True)
+        # print(len(approx))
+        x1, y1, w1, h1 = cv2.boundingRect(approx_cnt1)
+        M_cnt1 = cv2.moments(cnt)
+        cnt1X = int(M_cnt1["m10"] / M_cnt1["m00"])
+        cnt1Y = int(M_cnt1["m01"] / M_cnt1["m00"])
+        return cnt1X,cnt1Y
+
 
     def combine_and_compare(self, cnt_real_img, cnt_robodk_img,real_img):
 
@@ -71,23 +68,11 @@ class ImageProcessor:
         cv2.drawContours(img_copy, matchcont1, -1, (255, 0, 0), 3)
         cv2.drawContours(img_copy, matchcont2, -1, (0, 0, 255), 3)
         try:
-            peri_cnt1 = cv2.arcLength(matchcont1, True)
-            approx_cnt1 = cv2.approxPolyDP(matchcont1, 0.02 * peri_cnt1, True)
-            # print(len(approx))
-            x1, y1, w1, h1 = cv2.boundingRect(approx_cnt1)
-            peri_cnt2 = cv2.arcLength(matchcont1, True)
-            approx_cnt2 = cv2.approxPolyDP(matchcont2, 0.02 * peri_cnt2, True)
-            # print(len(approx))
-            x2, y2, w2, h2 = cv2.boundingRect(approx_cnt2)
-            M_cnt1 = cv2.moments(matchcont1)
-            cnt1X = int(M_cnt1["m10"] / M_cnt1["m00"])
-            cnt1Y = int(M_cnt1["m01"] / M_cnt1["m00"])
+            cnt1X,cnt1Y = self.get_coordinates(matchcont1)
+            cnt2X, cnt2Y = self.get_coordinates(matchcont2)
+            print("cnt_live x,y",(cnt1X,cnt1Y))
+            print("cnt_robodk x,y", (cnt2X, cnt2Y))
             cv2.circle(img_copy, (cnt1X, cnt1Y), 3, (255, 0, 0), -1)
-
-            M_cnt2 = cv2.moments(matchcont2)
-            cnt2X = int(M_cnt2["m10"] / M_cnt2["m00"])
-            cnt2Y = int(M_cnt2["m01"] / M_cnt2["m00"])
-            #print((cnt1X, cnt1Y), (cnt2X, cnt2Y))
             cv2.circle(img_copy, (cnt2X, cnt2Y), 3, (0, 0, 255), -1)
             return img_copy
         except:
@@ -127,7 +112,8 @@ class ImageProcessor:
                 dim = (int(robodk_image.shape[1] * size_pers / 100), int(robodk_image.shape[0] * size_pers / 100))
                 img2_res = cv2.resize(robodk_image, dim, interpolation=cv2.INTER_AREA)
                 numpy_horizontal = np.hstack((img, img2_res))
-                cv2.imshow("Match!", numpy_horizontal)
+                #cv2.imshow("Match!", numpy_horizontal)
+                set_output_img(numpy_horizontal)
                 if cv2.waitKey(1) & 0xff == ord('q'):
                     break
         else:
@@ -152,7 +138,7 @@ class ImageProcessor:
                 dim = (int(robodk_image.shape[1] * 25 / 100), int(robodk_image.shape[0] * 25 / 100))
                 img2_res = cv2.resize(robodk_image, dim, interpolation=cv2.INTER_AREA)
                 numpy_horizontal = np.hstack((img, img2_res))
-                cv2.imshow("Match!", numpy_horizontal)
-                #cv2.waitKey(0)
+                #cv2.imshow("Match!", numpy_horizontal)
+                set_output_img(numpy_horizontal)
                 if cv2.waitKey(1) & 0xff == ord('q'):
                     break
