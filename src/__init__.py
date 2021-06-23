@@ -21,8 +21,8 @@ class Main:
 
     """
     app = App()
-    cam_image = StaticImage('Resources/topview2.jpg', 'cam_img')
-    robo_dk_image = StaticImage('Resources/cameraSideMount v5_v11.png', 'robodk_img')
+    cam_image = StaticImage('Resources/topview.jpg', 'cam_img')
+    robo_dk_image = StaticImage('Resources/cameraSideMount_v1.png', 'robodk_img')
     live_image = LiveImage(1, 'liveImage')
     imgprocessor = ImageProcessor()
     imgprocessor.show_and_save_image(cam_image, robo_dk_image, 25, live_image, app,False)

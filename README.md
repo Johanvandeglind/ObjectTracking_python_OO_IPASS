@@ -40,6 +40,17 @@ In this case it is the image out of a 3D draw program called RoboDK.
 It finds the objects that are the same and then draws the outside shape of these objects. 
 It also prints the x and y coordinates of the midpoint.
 
+---
+
+### Resources
+All the images needed for the program to work without camera
+
+Always use [topview.jpg](src/Resources/topview.jpg) as cam_image, this a picture taken with the camera on the Cobot
+For use without live image always use [cameraSideMount\_v1]('Resources/cameraSideMount v1.png') as robodk_image
+For use with live image always use [cameraSideMount\_v2]('Resources/cameraSideMount v2.png')
+
+This is because when the live image is read opcv cant use the full res of the camera and steps down to 2048*1536 and i dont know how to fix this
+
 
 ---
 ##### sources:
