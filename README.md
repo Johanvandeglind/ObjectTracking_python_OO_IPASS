@@ -8,7 +8,7 @@ The company Cobotify wants to make it possible to do small repeating actions wit
 To do this the workable meterials need to be fixed in one place so the Cobot can make the adjustments to the meterials.
 
 ### The mission
-Make a more reliable and precise way to fixate the to be edited materials
+Make a more reliable and precise way to fixate to be edited materials
 
 ---
 

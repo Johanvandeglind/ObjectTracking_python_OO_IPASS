@@ -1,3 +1,4 @@
+#Copyright 2021, Johan van de Glind, All rights reserved.
 import cv2
 from src.imageProcessing import Image
 

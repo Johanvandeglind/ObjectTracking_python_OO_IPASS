@@ -1,3 +1,4 @@
+#Copyright 2021, Johan van de Glind, All rights reserved.
 import cv2
 import numpy as np
 from src.Application.App import App
@@ -131,19 +132,21 @@ class ImageProcessor:
         img = cv2.resize(combined_image, dim, interpolation=cv2.INTER_AREA)
         dim = (int(robodk_image.shape[1] * size_pers / 100), int(robodk_image.shape[0] * size_pers / 100))
         img2_res = cv2.resize(robodk_image, dim, interpolation=cv2.INTER_AREA)
-        numpy_horizontal = np.hstack((img, img2_res))
-        app.show_Image(numpy_horizontal)
+        cv2.imwrite("Resources/combined_image.png",img)
+        #numpy_horizontal = np.hstack((img, img2_res))
+        app.show_Image(img)
 
     def show_and_save_image(self, real_image: StaticImage, robodk_image: StaticImage, size_pers: int,
-                            liveimage: LiveImage, app: App):
+                            liveimage: LiveImage, app: App,live:bool):
         """
         This function checks if the camera is connected via usb.
         If not it uses the static real image and if so it uses the live feed of the camera
         Then it activates the generate_new_image function.
         """
         robodk_image = cv2.imread(robodk_image.get_SourcePath())
-        cap = cv2.VideoCapture(liveimage.get_CameraNumber())
-        if cap.isOpened():
+
+        if live:
+            cap = cv2.VideoCapture(liveimage.get_CameraNumber())
             cap.set(cv2.CAP_PROP_FRAME_WIDTH, 2048)
             cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1536)
             assert cap.isOpened(), "file/camera could not be opened!"

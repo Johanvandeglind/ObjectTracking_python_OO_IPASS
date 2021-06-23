@@ -1,3 +1,4 @@
+#Copyright 2021, Johan van de Glind, All rights reserved.
 class Image:
     """
     This class is a perent class of LiveImage and StaticImage,

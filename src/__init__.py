@@ -1,4 +1,4 @@
-#lulaconst1
+#Copyright 2021, Johan van de Glind, All rights reserved.
 import cv2
 
 from src.Application.App import App
@@ -21,11 +21,11 @@ class Main:
 
     """
     app = App()
-    cam_image = StaticImage('Recources/topview2.jpg', 'cam_img')
-    robo_dk_image = StaticImage('Recources/cameraSideMount v5_v11.png', 'robodk_img')
+    cam_image = StaticImage('Resources/topview2.jpg', 'cam_img')
+    robo_dk_image = StaticImage('Resources/cameraSideMount v5_v11.png', 'robodk_img')
     live_image = LiveImage(1, 'liveImage')
     imgprocessor = ImageProcessor()
-    imgprocessor.show_and_save_image(cam_image, robo_dk_image, 25, live_image, app)
+    imgprocessor.show_and_save_image(cam_image, robo_dk_image, 25, live_image, app,False)
 
 if __name__ == "__main__":
     Main()
