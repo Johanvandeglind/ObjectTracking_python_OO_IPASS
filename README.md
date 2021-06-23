@@ -53,7 +53,7 @@ This is because when the live image is read opcv cant use the full res of the ca
 
 
 ---
-##### citation:
+##### Citation:
 contours:[link](https://learnopencv.com/contour-detection-using-opencv-python-c/#Steps-for-Finding-and-Drawing-Contours-in-OpenCV)
 contours midpoint:[link](https://www.geeksforgeeks.org/find-co-ordinates-of-contours-using-opencv-python/)
 shapes in images: [link](https://www.pyimagesearch.com/2014/10/20/finding-shapes-images-using-python-opencv/)
