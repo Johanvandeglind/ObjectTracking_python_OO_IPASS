@@ -29,9 +29,9 @@ This python file contains the application where the image output is shown.
 ### imageProcessing
 #### [Image](src/imageProcessing/Image.py)
 The image Class creates the object with the paramaters for an image, the resolution and the name is to be declared.
-#####[StaticImage](src/imageProcessing/StaticImage.py)
+##### [StaticImage](src/imageProcessing/StaticImage.py)
 This Class is an extend of the Image Class. This Class is to declare pictures.
-#####[LiveImage](src/imageProcessing/LiveImage.py)
+##### [LiveImage](src/imageProcessing/LiveImage.py)
 This class is an extend of the Image Class. This Class is to declare live image feed.
 
 #### [ImageProcessor](src/imageProcessing/ImageProcessor.py)
