@@ -54,10 +54,12 @@ This is because when the live image is read opcv cant use the full res of the ca
 
 ---
 ##### Citation:
-contours:[link](https://learnopencv.com/contour-detection-using-opencv-python-c/#Steps-for-Finding-and-Drawing-Contours-in-OpenCV)
-contours midpoint:[link](https://www.geeksforgeeks.org/find-co-ordinates-of-contours-using-opencv-python/)
-shapes in images: [link](https://www.pyimagesearch.com/2014/10/20/finding-shapes-images-using-python-opencv/)
-    
+contours:
+Rath, S. (2021, 12 mei). Contour Detection using OpenCV (Python/C++). Learn OpenCV | OpenCV, PyTorch, Keras, Tensorflow Examples and Tutorials. https://learnopencv.com/contour-detection-using-opencv-python-c/#Steps-for-Finding-and-Drawing-Contours-in-OpenCV
 
+contours midpoint:
+GeeksforGeeks. (2019, 13 oktober). Find Co-ordinates of Contours using OpenCV | Python. https://www.geeksforgeeks.org/find-co-ordinates-of-contours-using-opencv-python/
+shapes in images: 
+Rosebrock, A. (2021, 17 april). Finding Shapes in Images using Python and OpenCV. PyImageSearch. https://www.pyimagesearch.com/2014/10/20/finding-shapes-images-using-python-opencv/
 
 

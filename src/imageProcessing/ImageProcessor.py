@@ -132,7 +132,7 @@ class ImageProcessor:
         img = cv2.resize(combined_image, dim, interpolation=cv2.INTER_AREA)
         dim = (int(robodk_image.shape[1] * size_pers / 100), int(robodk_image.shape[0] * size_pers / 100))
         img2_res = cv2.resize(robodk_image, dim, interpolation=cv2.INTER_AREA)
-        cv2.imwrite("Resources/combined_image.png",img)
+        #cv2.imwrite("Resources/combined_image.png",img)
         #numpy_horizontal = np.hstack((img, img2_res))
         app.show_Image(img)
 
