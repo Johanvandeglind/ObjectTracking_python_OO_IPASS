@@ -12,7 +12,7 @@ Make a more reliable and precise way to fixate the to be edited materials
 
 ---
 
-### The code
+## The code
 
 ### [\_\_init\_\_.py](src/__init__.py)
 To run the code, run the [\_\_init\_\_.py](src/__init__.py) file, this contains the Main class.
