@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 from src.Application.App import App
 from src.imageProcessing.LiveImage import LiveImage
-from src.imageProcessing.statImage import StaticImage
+from src.imageProcessing.StaticImage import StaticImage
 
 
 class ImageProcessor:

@@ -4,7 +4,7 @@ import cv2
 from src.Application.App import App
 from src.imageProcessing.ImageProcessor import ImageProcessor
 from src.imageProcessing.LiveImage import LiveImage
-from src.imageProcessing.statImage import StaticImage
+from src.imageProcessing.StaticImage import StaticImage
 
 
 class Main:
